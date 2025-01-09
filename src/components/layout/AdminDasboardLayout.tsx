@@ -30,9 +30,20 @@ export default function AdminDasboardLayout({
   const navigate = useNavigate();
 
   const userDetails = authStore(state => state.userDetails);
+  const isLoggedIn = authStore(state => state.isLoggedIn);
+  const removeUser = authStore(state => state.removeUser);
 
   if(userDetails.role == "customer") {
     navigate("/");
+  }
+
+  if(!isLoggedIn) {
+    navigate("/admin/login");
+  }
+
+  const logOut = () => {
+    removeUser();
+    navigate("/admin/login");
   }
 
   return (
@@ -69,7 +80,7 @@ export default function AdminDasboardLayout({
         >
           Orders
         </NavLink>
-        <button className="text-left py-2 w-full rounded-md px-4">
+        <button onClick={logOut} className="text-left py-2 w-full rounded-md px-4">
           Log Out
         </button>
       </div>

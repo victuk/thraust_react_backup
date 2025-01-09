@@ -22,6 +22,8 @@ import AdminOrder from './pages/adminpages/order.tsx';
 import AdminAddOrEdit from './pages/adminpages/addoreditproduct.tsx';
 import AdminLogin from './pages/adminpages/login.tsx';
 import { ToastContainer } from 'react-toastify';
+import Cart from './pages/cart.tsx';
+import ShippingAddressPage from './pages/shippingAddress.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -31,7 +33,9 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/" element={<Home />} />
       <Route path="/aboutus" element={<AboutUs />} />
       <Route path="/gallery" element={<Gallery />} />
+      <Route path="/cart" element={<Cart />} />
       <Route path="/products" element={<OurProducts />} />
+      <Route path="/shippingaddress" element={<ShippingAddressPage />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/product/:id" element={<SingleProduct />} />
       <Route path="/register" element={<Register />} />

@@ -1,23 +1,56 @@
-import { useState } from "react";
-import { ProductInterface } from "../../../interfaces/ProductInterface";
+import { useCallback, useMemo, useState } from "react";
+import { CategoryInterface, ProductInterface } from "../../../interfaces/ProductInterface";
 import { Link, useNavigate } from "react-router";
+import { formatCurrency, getCurrencySymbol } from "../../../utils/formatCurrency";
+import { cartStore } from "../../../store/cartStore";
+import Modal from "react-modal";
+import DeleteProductModal from "./DeleteProductModal";
 
 interface ProductCardInterface extends ProductInterface {
   isAdmin: boolean;
 }
 
 export default function ProductCard({
-  name,
+  _id,
+  productName,
   description,
-  picture,
+  pictures,
   categories,
-  sizesAvailable,
+  sizeAndColor,
   cost,
   isAdmin,
+  forType,
+  stockStatus
 }: ProductCardInterface) {
   const [isHovered, setHovered] = useState(false);
 
   const navigate = useNavigate();
+
+  const cart = cartStore(state => state.cart);
+  const addToCart = cartStore(state => state.addToCart);
+  const removeProduct = cartStore(state => state.removeProduct);
+  const isInCart = cartStore(state => state.isInCart);
+
+  const isProductInCart = useMemo(() => {
+    return isInCart(_id!!);
+  }, [cart]);
+
+  const currencySymbol = getCurrencySymbol();
+
+  const [productToDelete, setProductToDelete] = useState("");
+
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+const openModal = (id: string) => {
+    setProductToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const closeModal = (shouldDelete: boolean) => {
+    if (shouldDelete) {
+    }
+    setDeleteModalOpen(false);
+    setProductToDelete("");
+  };
 
   return (
     <div
@@ -33,25 +66,27 @@ export default function ProductCard({
         className="w-full h-[400px] flex justify-center items-center"
         onClick={() => {
           if (isAdmin == false) {
-            navigate("/product/1");
+            navigate(`/product/${_id}`);
+          } else {
+            navigate(`/admin/addoredit?id=${_id}`);
           }
         }}
       >
-        <img src={picture} alt={name} className="w-[400px] h-[320px]" />
+        <img src={pictures[0]} alt={productName} className="w-[400px] h-[320px] rounded-md" />
       </div>
       <div>
-        {categories.map((c) => (
+        {(categories as CategoryInterface[]).map((c) => (
           <div className="bg-[#ccc] px-2 text-black inline-block rounded-xl text-[10px] font-bold">
-            {c}
+            {c.name}
           </div>
         ))}
       </div>
       <div>
         {/* <div className="text-[10px]">Sizes available:</div> */}
         <div className="flex gap-1">
-          {sizesAvailable.map((s) => (
+          {sizeAndColor.map((s) => (
             <div className="border border-2 border-solid border-primary px-2 text-primary inline-block text-[14px] rounded-md font-bold">
-              {s}
+              {s.size}
             </div>
           ))}
         </div>
@@ -61,28 +96,30 @@ export default function ProductCard({
         onClick={() => {
           if (isAdmin == false) {
             navigate("/product/1");
+          }  else {
+            navigate(`/admin/addoredit?id=${_id}`);
           }
         }}
       >
-        {name}
+        {productName}
       </div>
       <p>{description}</p>
       <div>
         <div className="text-[10px]">Cost:</div>
-        <div className="font-bold">N{cost}</div>
+        <div className="font-bold">{currencySymbol}{formatCurrency(cost)}</div>
       </div>
 
       {isAdmin ? (
         <div className={`flex flex-col gap-2`}>
-        <button className="border border-2 border-solid border-primary text-primary w-full text-center py-2 rounded-xl font-bold">
+        <button onClick={() => {navigate(`/admin/addoredit?id=${_id}`);}} className="border border-2 border-solid border-primary text-primary w-full text-center py-2 rounded-xl font-bold">
           Edit
         </button>
-        <Link
-          to="/product/1"
+        <button
+          onClick={() => {openModal(_id!!)}}
           className="border border-2 border-solid border-[red] text-[red] w-full text-center py-2 rounded-xl font-bold"
         >
           Delete
-        </Link>
+        </button>
       </div>
       ) : (
         <div
@@ -90,17 +127,41 @@ export default function ProductCard({
             isHovered ? "md:opacity-1" : "md:opacity-0"
           } opacity-1 flex flex-col gap-2`}
         >
-          <button className="bg-primary text-white w-full text-center py-2 rounded-xl font-bold">
-            Add to Cart
+          {isProductInCart ? (
+            <button className="bg-primary text-white w-full text-center py-2 rounded-xl font-bold" onClick={() => {removeProduct(_id!!)}}>
+            Remove from Cart
           </button>
+          ) : (
+            <button className="bg-primary text-white w-full text-center py-2 rounded-xl font-bold" onClick={() => {addToCart({
+              _id,
+              productName,
+              description,
+              pictures,
+              categories,
+              sizeAndColor,
+              cost,
+              forType,
+              stockStatus
+            })}}>
+              Add to Cart
+          </button>
+          ) }
+          
           <Link
-            to="/product/1"
+            to={`/product/${_id}`}
             className="border border-2 border-solid border-primary text-primary w-full text-center py-2 rounded-xl font-bold"
           >
             View
           </Link>
         </div>
       )}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        style={{overlay: {zIndex: 200}}}
+        onRequestClose={() => {closeModal(false)}}
+      >
+        <DeleteProductModal productName={productName} closeModal={closeModal} />
+      </Modal>
     </div>
   );
 }

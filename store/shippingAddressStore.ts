@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import uuid from "react-native-uuid";
+import {v4} from "uuid";
 
 export interface ShippingAddressDetails {
   id?: string;
-  country: string;
+  country?: string;
   state: string;
   city: string;
   address: string;
@@ -26,8 +26,9 @@ export const shippingAddressStore = create<Store>()(
       shippingAddresses: [],
       addShippingAddress: (shippingAddressDetails: ShippingAddressDetails) =>
         set((state) => {
-          shippingAddressDetails.id = uuid.v4();
-          shippingAddressDetails.isDefault = state.shippingAddresses.length == 0 ? true : false;
+          shippingAddressDetails.id = v4();
+          shippingAddressDetails.country = "Nigeria";
+          shippingAddressDetails.isDefault = state.shippingAddresses.length == 0 || !(state.shippingAddresses.find(s => s.isDefault)) ? true : false;
           return { shippingAddresses: [shippingAddressDetails, ...state.shippingAddresses] };
         }),
         updateShippingAddress: (id, updatedShippingAddressDetails) =>
@@ -37,7 +38,7 @@ export const shippingAddressStore = create<Store>()(
             if(shippingAddress.id == id) {
               return {
                 ...shippingAddress,
-                country: updatedShippingAddressDetails.country,
+                // country: updatedShippingAddressDetails.country,
                 state: updatedShippingAddressDetails.state,
                 city: updatedShippingAddressDetails.city,
                 address: updatedShippingAddressDetails.address

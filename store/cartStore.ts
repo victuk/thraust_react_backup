@@ -1,166 +1,119 @@
-import { ForYou, Products, Shops } from "@/utils/db";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { ProductInterface } from "../interfaces/ProductInterface";
 
-export interface ProductWithQuantity extends Products {
-  quantity?: number;
+export interface SizeAndColor {
+  size: string;
+  color: string;
+  quantity: number;
 }
 
-export interface Cart {
-  shopDetails: Shops;
-  products: ProductWithQuantity[];
+export interface ProductWithQuantity extends ProductInterface {
+  sizeColorQuantity?: SizeAndColor[];
 }
 
 type QuantityAction = "increase" | "decrease" | "reset";
 
 interface Store {
-  cart: Cart[];
-  addToCart: (Shop: Shops, product: ProductWithQuantity) => void;
+  cart: ProductWithQuantity[];
+  addToCart: (product: ProductInterface) => void;
   modifyQuantity: (
-    shopId: string,
     productId: string,
+    size: string,
+    color: string,
     action: QuantityAction
   ) => void;
-  removeShop: (shopId: string) => void;
-  removeProduct: (shopId: string, productId: string) => void;
-  isInCart: (shopId: string, productId: string) => boolean;
-  productQuantity: (shopId: string, productId: string) => number;
+  removeProduct: (productId: string) => void;
+  isInCart: (productId: string) => boolean;
 }
 
 export const cartStore = create<Store>()(
   persist(
     (set, get) => ({
       cart: [],
-      addToCart: (shop, product) =>
+      addToCart: (product) =>
         set((state) => {
 
-          product.quantity = 1;
 
-          const storeExists = state.cart.find(s => s.shopDetails._id == shop._id);
+          const productExists = state.cart.find(s => s._id == product._id);
 
-          if(storeExists) {
-            const updatedProducts = [...storeExists.products, product];
+          if(!productExists) {
 
-            return {cart: state.cart.map(c => {
-              if(c.shopDetails._id == shop._id) {
-                c.products = updatedProducts
-              }
-              return c;
-            })}
+            const productDefaultSCQ = product.sizeAndColor.map((s) => ({
+              size: s.size,
+              color: s.color,
+              quantity: 0
+            }));
+
+            const newProduct: ProductWithQuantity = product;
+
+            newProduct.sizeColorQuantity = productDefaultSCQ;
+
+            return {cart: [newProduct, ...state.cart]}
 
           } else {
-            return {
-              cart: [...state.cart, {shopDetails: shop, products: [product]}]
-            };
+            return {cart: state.cart}
           }
         }),
-      modifyQuantity: (shopId, productId, action) =>
+      modifyQuantity: (productId, size, color, action) =>
         set((state) => {
 
-          const shop = state.cart.find(s => s.shopDetails._id == shopId);
+          const product = state.cart.find(p => p._id == productId);
 
-          const product = shop!!.products.find(p => p._id == productId);
-          
-          if(!shop || !product) return {cart: state.cart};
-          
-          const productQuantity = shop!!.products.find(p => p._id == productId)?.quantity;
+          if(!product) return {cart: state.cart};
 
-          let updatedCart;
-
-          if(productQuantity == 1 && action == "decrease") {
-            updatedCart = state.cart.filter(c => c.shopDetails._id != shopId)
-          } else {
-            updatedCart = state.cart.map(c => {
-              if(c.shopDetails._id == shopId) {
-  
-                return {
-                  shopDetails: c.shopDetails,
-                  products: c.products.map(p => {
-                    if (p._id == productId) {
-                      let product = p;
-                      if(action == "increase") {
-                        product!!.quantity = product!!.quantity as number + 1;
-                      } else if(action == "decrease") {
-                        product!!.quantity = product!!.quantity as number - 1;
-                      } else if(action == "reset") {
-                        product!!.quantity = 1;
-                      }
-                      return product;
-                    }
-                    return p;
-                  })
+          const newSCQ = product.sizeColorQuantity?.map(SCQ => {
+            if(SCQ.color == color && SCQ.size == size) {
+              if(action == "increase") {
+                SCQ.quantity += 1;
+              } else if(action == "decrease") {
+                if(SCQ.quantity > 0) {
+                  SCQ.quantity -= 1;
                 }
-                
-              }
-              return c;
-            });
-          }
-          
-          return { cart: updatedCart };
-        }),
-      removeShop: (shopId) =>
-        set((state) => {
-          return { cart: state.cart.filter(c => c.shopDetails._id != shopId) };
-        }),
-      removeProduct: (shopId, productId) =>
-        set((state) => {
-
-          const shop = state.cart.find(s => s.shopDetails._id == shopId);
-
-          const product = shop!!.products.find(p => p._id == productId);
-          
-          if(!shop || !product) return {cart: state.cart};          
-
-          const updatedCart = state.cart.map(c => {
-            if(c.shopDetails._id == shopId) {
-              return {
-                shopDetails: c.shopDetails,
-                products: c.products.filter(p => p._id != productId)
+              } else if (action == "reset") {
+                SCQ.quantity = 0;
               }
             }
-            return c;
+            return SCQ;
           });
 
-          const shopCheck = updatedCart.find(s => s.shopDetails._id == shopId);
+          product.sizeColorQuantity = newSCQ;
 
-          if(shopCheck?.products.length == 0) {
-            return {cart: updatedCart.filter(c => c.shopDetails._id != shopId)}
-          }
-
-          return { cart: updatedCart };
+            return {cart: state.cart.map(p => {
+              if(p._id == product._id) {
+                return product;
+              } else {
+                return p
+              }
+            })}
+          
         }),
-        isInCart: (storeId, productId) => {
-          const cart = get().cart;
-          const shopDetails = cart.find(c => c.shopDetails._id == storeId);
+      removeProduct: (productId) =>
+        set((state) => {
 
-          if(!shopDetails) {
-            return false;
+          const product = state.cart.find(s => s._id == productId);
+
+          if(product) {
+
+            const updatedCart = state.cart.filter(c => c._id != product._id);
+
+            return { cart: updatedCart };
+
+          } else {
+            return { cart: state.cart }
           }
+        }),
+        isInCart: (productId) => {
+          const cart = get().cart;
+          const product = cart.find(c => c._id == productId);
 
-          const foundTheProduct = shopDetails.products.find(p => p._id == productId);
-
-          if(foundTheProduct) {
+          if(product) {
             return true;
           } else {
             return false;
           }
-        },
-        productQuantity: (storeId, productId) => {
-          const cart = get().cart;
-          const shopDetails = cart.find(c => c.shopDetails._id == storeId);
 
-          if(!shopDetails) {
-            return 0;
-          }
-
-          const foundTheProduct = shopDetails!!.products.find(p => p._id == productId);
-
-          if(!foundTheProduct) {
-            return 0;
-          }
-
-          return foundTheProduct?.quantity as number;
         }
     }),
     {
