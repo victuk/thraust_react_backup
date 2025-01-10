@@ -146,7 +146,7 @@ export default function AdminOrders() {
       }, []);
 
   return (
-    <AdminDasboardLayout header='Orders' searchPlaceholder='Search Products' showSearch={true} searchValue={searchKeyword} setSearchValue={setSearchKeyword} searchAction={searchAction}>
+    <AdminDasboardLayout header='Orders' searchPlaceholder='Search Products' showSearch={false} searchValue={searchKeyword} setSearchValue={setSearchKeyword} searchAction={searchAction}>
       <div className="mt-4">
         <div className="font-bold text-[25px]">Pending Orders</div>
         <div>

@@ -12,7 +12,7 @@ export default function AdminProducts() {
   const navigate = useNavigate();
 
   return (
-    <AdminDasboardLayout header='Products' addTopPadding={false} searchPlaceholder='Search Products' showSearch={true} searchValue={searchKeyword} setSearchValue={setSearchKeyword} searchAction={searchAction}>
+    <AdminDasboardLayout header='Products' addTopPadding={false} searchPlaceholder='Search Products' showSearch={false} searchValue={searchKeyword} setSearchValue={setSearchKeyword} searchAction={searchAction}>
       <div className='flex justify-end py-4 sticky top-0 bg-white'>
         <button className='bg-primary text-white px-8 py-2 font-bold rounded-md' onClick={() => {navigate("/admin/addoredit");}}>Add Product</button>
       </div>

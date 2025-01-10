@@ -6,6 +6,7 @@ import { cartStore } from "../../../store/cartStore";
 import Modal from "react-modal";
 import DeleteProductModal from "./DeleteProductModal";
 import { useProduct } from "../../../hooks/useProduct";
+import {trimText} from "../../../utils/trimText";
 
 interface ProductCardInterface extends ProductInterface {
   isAdmin: boolean;
@@ -104,7 +105,7 @@ const openModal = () => {
       >
         {productName}
       </div>
-      <p>{description}</p>
+      <p>{trimText(description, 35)}</p>
       <div>
         <div className="text-[10px]">Cost:</div>
         <div className="font-bold">{currencySymbol}{formatCurrency(cost)}</div>
