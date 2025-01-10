@@ -34,7 +34,7 @@ export default function CartItem({ cart }: { cart: ProductWithQuantity }) {
   const currencySymbol = getCurrencySymbol();
 
   return (
-    <div className="rounded-xl px-8 py-4" style={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
+    <div className="rounded-xl px-4 md:px-8 py-4" style={{ boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
       <div className="flex flex-col md:flex-row justify-between">
         <div className="flex gap-4 items-center">
           <img
@@ -51,8 +51,8 @@ export default function CartItem({ cart }: { cart: ProductWithQuantity }) {
         </div>
         <div className="flex flex-col gap-4 justify-center items-start my-4 md:my-0 md:items-end">
             <div className="flex gap-4">
-                <button>
-                    <FaPencil size={25} className="text-primary" onClick={openModal} />
+                <button onClick={openModal}>
+                    <FaPencil size={25} className="text-primary" />
                 </button>
                 <button onClick={() => {removeCartItem(cart._id!!)}}>
                     <FaTrash size={25} color={"red"} />
@@ -69,7 +69,7 @@ export default function CartItem({ cart }: { cart: ProductWithQuantity }) {
         {cart.sizeColorQuantity?.filter(s => s.quantity != 0).length == 0 && (
             <button className="flex gap-2 items-center my-2 py-1 px-4 bg-primary text-white rounded-xl" onClick={openModal}><div>Add size and color</div><FaPlus /></button>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
           {cart.sizeColorQuantity?.filter(s => s.quantity != 0).map((SQC, index) => (
             <CartColorSizeAndQuantity
               color={SQC.color}

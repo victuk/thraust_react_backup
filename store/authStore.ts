@@ -31,7 +31,7 @@ export const authStore = create<Store>()(
         jwt: "",
       },
       setUser: (userDetails: UserDetails) =>
-        set((state) => {
+        set((_state) => {
           return { userDetails, isLoggedIn: true };
         }),
         changeUserProfilePic: (newProfilePicture: string) =>
@@ -43,7 +43,7 @@ export const authStore = create<Store>()(
               return { userDetails: {...state.userDetails, fullName: `${firstName} ${surname}`} };
             }),
       removeUser: () =>
-        set((state) => {
+        set((_state) => {
           return {
             isLoggedIn: false,
             userDetails: {

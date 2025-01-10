@@ -1,6 +1,5 @@
 import DefaultLayout from "../components/layout/DefaultLayout";
 import { Link } from "react-router";
-import { sampleProductCategories, sampleProducts } from "../../db.ts";
 import Products from "../components/products/Products";
 import ContactComponent from "../components/Contact.tsx";
 import HeroComponent from "../components/HeroComponent.tsx";

@@ -5,11 +5,18 @@ import { shippingAddressStore } from "../../store/shippingAddressStore";
 import CartItem from "../components/CartComponent/CartItem";
 import OtherPageHeader from "../components/OtherPageHeader";
 import DefaultLayout from "../components/layout/DefaultLayout";
-import Marquee from "react-fast-marquee";
 import { formatCurrency, getCurrencySymbol } from "../../utils/formatCurrency";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useOrders } from "../../hooks/useOrders";
+import { toast } from "react-toastify";
+import { Bounce } from "react-activity";
 
 export default function Cart() {
+
+  const navigate = useNavigate();
+
+  const { createPaystackPaymentLink, isCreatePaymentLinkLoading, createAnOrder, isCreateOrderLoading } = useOrders();
+
   const isLoggedIn = authStore((state) => state.isLoggedIn);
   const userDetails = authStore((state) => state.userDetails);
 
@@ -46,6 +53,31 @@ export default function Cart() {
 
   const currencySymbol = getCurrencySymbol();
 
+  const pay = async () => {
+
+    if(!defaultShippingAddress) {
+      toast.error("No shipping address is selected");
+      return;
+    }
+
+    const orderDetails = await createAnOrder({
+      products: cart,
+      totalCost: grandTotal,
+      state: defaultShippingAddress!!.state,
+      city: defaultShippingAddress!!.city,
+      address: defaultShippingAddress!!.address
+    });
+
+    const orderId = orderDetails.data.result._id;
+
+    const response = await createPaystackPaymentLink(orderId);
+
+    const authorizationUrl = response.data.result.data.authorization_url;
+
+    location.assign(`${authorizationUrl}?orderId=${orderId}`);
+
+  };
+
   return (
     <DefaultLayout>
       <OtherPageHeader header="Cart" />
@@ -54,11 +86,13 @@ export default function Cart() {
         id="about"
         className="flex flex-col-reverse md:flex-row-reverse gap-10 py-10 px-10 xl:px-[140px] min-h-[70vh]"
       >
-        <div className="w-full md:w-[400px] text-left md:text-right">
+        <div className="w-full md:w-[460px] text-left md:text-right">
           {isLoggedIn ? (
             <div>
               <div className="mb-4">
-                <div className="my-2 font-bold text-[20px] text-left">User Details</div>
+                <div className="my-2 font-bold text-[20px] text-left">
+                  User Details
+                </div>
                 <div className="flex flex-col gap-2">
                   {/* <img src={
                       userDetails.profilePicture == ""
@@ -129,6 +163,7 @@ export default function Cart() {
                   </div>
                 </div>
                 <button
+                onClick={pay}
                   className={`w-full px-8 py-2 mt-4 font-bold ${
                     checkoutDisabled
                       ? "opacity-[0.6] bg-[#3E7B27]"
@@ -136,41 +171,74 @@ export default function Cart() {
                   } text-white rounded-xl`}
                   disabled={checkoutDisabled}
                 >
-                  {" "}
-                  Checkout
+                  {isCreateOrderLoading || isCreatePaymentLinkLoading ? (<Bounce />) : "Checkout"}
                 </button>
               </div>
             </div>
           ) : (
             <div>
-              <div>Login to see details</div>
               <div>
                 <div style={{ opacity: 0.5 }}>
                   <div>
-                    <div>User Details</div>
-                    <div className="flex gap-4 items-center">
-                      <img
-                        src={"/avatar.png"}
-                        className="h-[40px] w-[40px] rounded-full"
-                      />
-                      <div>
-                        <div>Full name: --</div>
-                        <div>Email: --</div>
-                      </div>
+                  <div className="my-2 font-bold text-[20px] text-left">
+                  User Details
+                </div>
+                    <div className="flex flex-col gap-2">
+                  {/* <img src={
+                      userDetails.profilePicture == ""
+                        ? "/avatar.png"
+                        : userDetails.profilePicture
+                    } className="ml-0 md:ml-auto h-[80px] w-[80px] rounded-full" /> */}
+                  <div className="flex justify-between items-end">
+                    <div className="text-[#aaa] text-[14px]">Full name</div>
+                    <div className="font-medium text-[18px]">
+                      --
                     </div>
                   </div>
-
-                  <div>
-                    <div>Shipping Details</div>
-                    <div className="flex gap-4 items-center">
-                      <div>
-                        <div>Full name: --</div>
-                        <div>Email: --</div>
-                      </div>
+                  <div className="flex justify-between items-end">
+                    <div className="text-[#aaa] text-[14px]">Email</div>
+                    <div className="font-medium text-[18px]">
+                      --
                     </div>
                   </div>
                 </div>
-                <button>Log In</button>
+                  </div>
+
+                  <div>
+                  <div className="my-2 font-bold text-[20px] text-left">
+                  Shipping Details
+                </div>
+                    <div className="flex flex-col gap-2">
+                  {/* <img src={
+                      userDetails.profilePicture == ""
+                        ? "/avatar.png"
+                        : userDetails.profilePicture
+                    } className="ml-0 md:ml-auto h-[80px] w-[80px] rounded-full" /> */}
+                  <div className="flex justify-between items-end">
+                    <div className="text-[#aaa] text-[14px]">State</div>
+                    <div className="font-medium text-[18px]">
+                      --
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-end">
+                    <div className="text-[#aaa] text-[14px]">City</div>
+                    <div className="font-medium text-[18px]">
+                      --
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-end">
+                    <div className="text-[#aaa] text-[14px]">Address</div>
+                    <div className="font-medium text-[18px]">
+                      --
+                    </div>
+                  </div>
+                </div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                <div className="mb-2 text-left font-medium">Login to see details</div>
+                <button onClick={() => {navigate("/login")}} className="border border-primary text-primary font-medium py-2 px-4 w-full rounded-md">Log In</button>
+                </div>
               </div>
             </div>
           )}

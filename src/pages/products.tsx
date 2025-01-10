@@ -3,7 +3,7 @@ import DefaultLayout from "../components/layout/DefaultLayout";
 import Products from "../components/products/Products";
 import { Link, useLocation } from "react-router";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import { useCategory } from "../../hooks/useCategory";
 import { CategoryInterface } from "../../interfaces/ProductInterface";

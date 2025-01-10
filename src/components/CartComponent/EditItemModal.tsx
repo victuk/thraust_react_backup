@@ -1,6 +1,4 @@
-import React, { useCallback } from "react";
 import { CgClose } from "react-icons/cg";
-import { ProductInterface } from "../../../interfaces/ProductInterface";
 import { cartStore, ProductWithQuantity } from "../../../store/cartStore";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
@@ -25,7 +23,7 @@ export default function EditItemModal({
           <CgClose size={25} />
         </button>
       </div>
-      <div className="grid grid-cols-4 gap-10 justify-center items-center h-full my-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10 justify-center items-center h-full my-8">
         {product.sizeColorQuantity?.map((s) => {
           return (
             <div className="flex flex-col items-center gap-1 font-bold text-[20px]">

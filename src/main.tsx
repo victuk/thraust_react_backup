@@ -23,7 +23,8 @@ import AdminAddOrEdit from './pages/adminpages/addoreditproduct.tsx';
 import AdminLogin from './pages/adminpages/login.tsx';
 import { ToastContainer } from 'react-toastify';
 import Cart from './pages/cart.tsx';
-import ShippingAddressPage from './pages/shippingAddress.tsx';
+import ShippingAddressPage from './pages/shippingaddress.tsx';
+import OrderHistory from './pages/orderhistory.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -35,6 +36,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/gallery" element={<Gallery />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/products" element={<OurProducts />} />
+      <Route path="/orderhistory" element={<OrderHistory />} />
       <Route path="/shippingaddress" element={<ShippingAddressPage />} />
       <Route path="/contactus" element={<ContactUs />} />
       <Route path="/product/:id" element={<SingleProduct />} />

@@ -1,5 +1,4 @@
 import DefaultLayout from "../components/layout/DefaultLayout";
-import { sampleProducts } from "../../db";
 import { Link, useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
@@ -13,7 +12,6 @@ import {
 import { formatCurrency } from "../../utils/formatCurrency";
 
 export default function SingleProduct() {
-  const product = sampleProducts[0];
   const [productDetails, setProductDetails] = useState<ProductInterface | null>(
     null
   );
@@ -121,7 +119,7 @@ export default function SingleProduct() {
 
           <div className="mx-10 xl:mx-[140px] my-20">
             <div className="font-bold">Description</div>
-            <div>{product.description}</div>
+            <div>{productDetails.description}</div>
           </div>
         </>
       )}

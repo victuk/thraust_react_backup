@@ -16,6 +16,39 @@ export const useProduct = () => {
     const [isUploadProductsLoading, setUploadProductsLoading] = useState(false);
     const [isEditProductsLoading, setEditProductsLoading] = useState(false);
     const [isDeleteProductsLoading, setDeleteProductsLoading] = useState(false);
+    const [isAdminHomeLoading, setAdminHomeLoading] = useState(false);
+
+
+    const adminHome = async (): Promise<ApiResponseInterface> => {
+        try {
+            setAdminHomeLoading(true);
+
+            const response = await axios.get(urlMaker(`/shop/home`), {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwt}`
+                }
+            });
+
+            return {
+                data: response.data,
+                error: null,
+                successful: true
+            };
+
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            return {
+                data: {
+                    status: axiosError.response?.status
+                  },
+                error: axiosError.response?.data,
+                successful: false
+            }
+        } finally {
+            setAdminHomeLoading(false);
+        }
+    }
 
     const jwt = authStore((state) => state.userDetails.jwt);
 
@@ -251,6 +284,8 @@ export const useProduct = () => {
         uploadProduct,
         deleteProduct,
         editProduct,
+        adminHome,
+        isAdminHomeLoading,
         isProductsPaginatedLoading,
         isSearchProductsLoading,
         isSingleProductLoading,

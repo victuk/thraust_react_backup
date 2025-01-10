@@ -1,10 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CategoryInterface, ProductInterface } from "../../../interfaces/ProductInterface";
 import { Link, useNavigate } from "react-router";
 import { formatCurrency, getCurrencySymbol } from "../../../utils/formatCurrency";
 import { cartStore } from "../../../store/cartStore";
 import Modal from "react-modal";
 import DeleteProductModal from "./DeleteProductModal";
+import { useProduct } from "../../../hooks/useProduct";
 
 interface ProductCardInterface extends ProductInterface {
   isAdmin: boolean;
@@ -37,19 +38,19 @@ export default function ProductCard({
 
   const currencySymbol = getCurrencySymbol();
 
-  const [productToDelete, setProductToDelete] = useState("");
+
+  const {deleteProduct} = useProduct();
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-const openModal = (id: string) => {
-    setProductToDelete(id);
+const openModal = () => {
     setDeleteModalOpen(true);
   };
 
   const closeModal = (shouldDelete: boolean) => {
     if (shouldDelete) {
+      deleteProduct(_id!!);
     }
     setDeleteModalOpen(false);
-    setProductToDelete("");
   };
 
   return (
@@ -115,7 +116,7 @@ const openModal = (id: string) => {
           Edit
         </button>
         <button
-          onClick={() => {openModal(_id!!)}}
+          onClick={() => {openModal()}}
           className="border border-2 border-solid border-[red] text-[red] w-full text-center py-2 rounded-xl font-bold"
         >
           Delete

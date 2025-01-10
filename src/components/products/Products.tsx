@@ -15,7 +15,7 @@ interface Props {
   category?: string;
 }
 
-interface fetchedProductsInterface {
+interface FetchedProductsInterface {
   docs: ProductInterface[];
   hasNextPage: boolean;
   hasPrevPage: boolean;
@@ -35,7 +35,7 @@ export default function Products({
   isAdmin = false,
 }: Props) {
   const [fetchedProducts, setFetchedProducts] =
-    useState<fetchedProductsInterface>({
+    useState<FetchedProductsInterface>({
       docs: [],
       hasNextPage: false,
       hasPrevPage: false,
@@ -48,20 +48,20 @@ export default function Products({
       totalPages: 1,
     });
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, _setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
 
   const { getProductsPaginated, isProductsPaginatedLoading } = useProduct();
 
-  const fetchProducts = async () => {
-    const response = await getProductsPaginated(currentPage, limit, category);
+  const fetchProducts = async (page: number, limit: number) => {
+    const response = await getProductsPaginated(page, limit, category);
     console.log(response.data.result);
     setFetchedProducts(response.data.result);
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(1, limit);
   }, [category]);
 
 

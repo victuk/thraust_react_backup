@@ -13,6 +13,10 @@ export const useOrders = () => {
   const [isMarkAsDeliveredLoading, setMarkAsDeliveredLoading] = useState(false);
   const [isCreatePaymentLinkLoading, setCreatePaymntLinkLoading] = useState(false);
 
+
+  const [isAdminOrderHistoryLoading, setAdminOrderHistoryLoading] = useState(false);
+  const [isAdminPendingOrderLoading, setAdminPendingOrderLoading] = useState(false);
+
   const jwt = authStore((state) => state.userDetails.jwt);
 
   const getPendingOrders = async (): Promise<ApiResponseInterface> => {
@@ -75,16 +79,15 @@ export const useOrders = () => {
         successful: false,
       };
     } finally {
-      setPendingOrdersLoading(false);
+      setOrderHistoryLoading(false);
     }
   };
 
   const createAnOrder = async ({
-    shopId,
+    // shopId,
+    // hungryFee,
     products,
     totalCost,
-    hungryFee,
-    country,
     state,
     city,
     address,
@@ -96,11 +99,8 @@ export const useOrders = () => {
       const result = await axios.post(
         urlMaker(`/customer/create-order`),
         {
-          shopId,
           products,
           totalCost,
-          hungryFee,
-          country,
           state,
           city,
           address,
@@ -132,13 +132,12 @@ export const useOrders = () => {
     }
   };
 
-  const createPaystackPaymentLink = async (shopId: string, orderId: string): Promise<ApiResponseInterface> => {
+  const createPaystackPaymentLink = async (orderId: string): Promise<ApiResponseInterface> => {
     try {
       setCreatePaymntLinkLoading(true);
       const result = await axios.post(
         urlMaker(`/customer/create-payment-link`),
         {
-          shopId,
           orderId
         },
         {
@@ -206,12 +205,80 @@ export const useOrders = () => {
     }
   }
 
+  const adminPendingOrders = async () => {
+    try {
+      setAdminPendingOrderLoading(true);
+      const result = await axios.get(
+        urlMaker(`/shop/pending-orders`),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return {
+        data: result.data,
+        error: null,
+        successful: true,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return {
+        data: {
+          status: axiosError.response?.status
+        },
+        error: axiosError.response?.data,
+        successful: false,
+      };
+    } finally {
+      setAdminPendingOrderLoading(false);
+    }
+  }
+
+  const adminOrderHistory = async (page: number = 1, limit: number = 10) => {
+    try {
+      setAdminOrderHistoryLoading(true);
+      const result = await axios.get(
+        urlMaker(`/shop/order-history/${page}/${limit}`),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return {
+        data: result.data,
+        error: null,
+        successful: true,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return {
+        data: {
+          status: axiosError.response?.status
+        },
+        error: axiosError.response?.data,
+        successful: false,
+      };
+    } finally {
+      setAdminOrderHistoryLoading(false);
+    }
+  }
+
   return {
     getPendingOrders,
     getOrderHistory,
     createAnOrder,
     createPaystackPaymentLink,
     markOrderAsDelivered,
+    adminOrderHistory,
+    adminPendingOrders,
+    isAdminOrderHistoryLoading,
+    isAdminPendingOrderLoading,
     isCreateOrderLoading,
     isCreatePaymentLinkLoading,
     isMarkAsDeliveredLoading,

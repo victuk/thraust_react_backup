@@ -33,6 +33,8 @@ export default function AdminDasboardLayout({
   const isLoggedIn = authStore(state => state.isLoggedIn);
   const removeUser = authStore(state => state.removeUser);
 
+  console.log("userDetails", userDetails);
+
   if(userDetails.role == "customer") {
     navigate("/");
   }
@@ -78,7 +80,7 @@ export default function AdminDasboardLayout({
             navbarDefaultStyle
           }
         >
-          Orders
+          Pending Orders
         </NavLink>
         <button onClick={logOut} className="text-left py-2 w-full rounded-md px-4">
           Log Out
@@ -108,12 +110,12 @@ export default function AdminDasboardLayout({
           <img
                       className="w-[40px] h-[40px] rounded-full"
                       src={
-                        userDetails.profilePicture == ""
+                        !userDetails.profilePicture
                           ? "/avatar.png"
                           : userDetails.profilePicture
                       }
                     />
-            <div className="text-[20px]">{userDetails.fullName}</div>
+            <div className="text-[20px] font-medium">{userDetails.fullName}</div>
             </div>
         </div>
         <div

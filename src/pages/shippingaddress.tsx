@@ -1,12 +1,8 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { authStore } from "../../store/authStore";
-import { cartStore } from "../../store/cartStore";
 import { shippingAddressStore } from "../../store/shippingAddressStore";
-import CartItem from "../components/CartComponent/CartItem";
 import OtherPageHeader from "../components/OtherPageHeader";
 import DefaultLayout from "../components/layout/DefaultLayout";
-import Marquee from "react-fast-marquee";
-import { formatCurrency, getCurrencySymbol } from "../../utils/formatCurrency";
 import { FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { useNavigate } from "react-router";

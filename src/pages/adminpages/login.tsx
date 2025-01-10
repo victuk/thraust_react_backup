@@ -60,7 +60,7 @@ export default function AdminLogin() {
           setLoginDetails({
             fullName: response.data.details.fullName,
             email: response.data.details.email,
-            profilePicture: response.data.details.profilePicture,
+            profilePicture: response.data.details.shopLogo,
             role: "shop",
             jwt: response.data.result,
           });

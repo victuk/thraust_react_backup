@@ -8,9 +8,7 @@ import { useFileUpload } from "../../../hooks/useFileUploads";
 import { useProduct } from "../../../hooks/useProduct";
 import { Bounce } from "react-activity";
 import { errorHandler } from "../../../utils/errorHandler";
-import { useLocation, useSearchParams } from "react-router";
-import { IoMdClose } from "react-icons/io";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { useLocation } from "react-router";
 
 interface SizeAndColor {
   id: string;

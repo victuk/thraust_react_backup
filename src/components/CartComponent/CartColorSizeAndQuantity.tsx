@@ -1,4 +1,3 @@
-import React from "react";
 import { SizeAndColor } from "../../../store/cartStore";
 
 export default function CartColorSizeAndQuantity({
@@ -7,7 +6,7 @@ export default function CartColorSizeAndQuantity({
   size,
 }: SizeAndColor) {
   return (
-    <div className="flex gap-2 border border-primary py-2 px-4 rounded-md text-primary font-bold mt-2">
+    <div className="flex gap-2 border border-primary py-2 px-4 rounded-md text-primary font-bold mt-2 justify-center">
       <div className="text-center">
           <div>{color}</div>
           <div className="text-[10px] font-thin">Color</div>

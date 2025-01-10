@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { sampleProducts } from '../../../db'
 import AdminDasboardLayout from '../../components/layout/AdminDasboardLayout'
 import Products from '../../components/products/Products'
 import { useNavigate } from 'react-router';

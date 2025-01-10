@@ -33,16 +33,11 @@ export type OrderStatusType = "pending" | "shipping-fee-updated" | "paid" | "pay
 
 export interface OrderInterface {
   _id?: string;
-  shopId: any;
   products: ProductWithQuantity[];
-  customerQrCode?: string;
-  riderQrCode?: string;
-  orderStatus?: OrderStatusType;
   shippingFee?: number;
-  hungryFee: number;
   totalCost: number;
   state: string;
-  country: string;
+  country?: string;
   city: string;
   address: string;
 }
