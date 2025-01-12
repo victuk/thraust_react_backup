@@ -63,6 +63,16 @@ export default function AdminDasboardLayout({
           Home
         </NavLink>
         <NavLink
+          to="/admin/categories"
+          className={({ isActive }) =>
+            (isActive ? activeNavbarButtonStyle : inactiveNavbarButtonStyle) +
+            " " +
+            navbarDefaultStyle
+          }
+        >
+          Categories
+        </NavLink>
+        <NavLink
           to="/admin/products"
           className={({ isActive }) =>
             (isActive ? activeNavbarButtonStyle : inactiveNavbarButtonStyle) +

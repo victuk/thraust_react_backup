@@ -34,19 +34,19 @@ export default function Home() {
             Latest Products
           </div>
           <div className="products">
-            <Products showPaginatedControl={false} />
+            <Products limit={8} showPageControl={false} />
 
             <div className="w-full text-center mt-8">
-              <button className="text-primary border border-2 font-bold border-primary px-8 py-2 rounded-xl text-primary">
+              <Link to={"/products?category=all"} className="text-primary border border-2 font-bold border-primary px-8 py-2 rounded-xl text-primary">
                 See more products
-              </button>
+              </Link>
             </div>
           </div>
         </section>
 
         <AnimateOnScroll animateIn="fadeInUp">
           <section className="py-10 px-10 xl:px-[140px]">
-            <div className="text-center font-bold text-[35px] mb-10 text-primary">
+            <div className="text-center font-bold text-[20px] md:text-[35px] mb-10 text-primary">
               Collections/Categories
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

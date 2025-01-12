@@ -16,7 +16,7 @@ import Register from './pages/register.tsx';
 import Login from './pages/login.tsx';
 import AdminHome from './pages/adminpages/home.tsx';
 import AdminProducts from './pages/adminpages/products.tsx';
-import AdminProduct from './pages/adminpages/product.tsx';
+import AdminProduct from './pages/adminpages/categories.tsx';
 import AdminOrders from './pages/adminpages/orders.tsx';
 import AdminOrder from './pages/adminpages/order.tsx';
 import AdminAddOrEdit from './pages/adminpages/addoreditproduct.tsx';
@@ -25,6 +25,7 @@ import { ToastContainer } from 'react-toastify';
 import Cart from './pages/cart.tsx';
 import ShippingAddressPage from './pages/shippingaddress.tsx';
 import OrderHistory from './pages/orderhistory.tsx';
+import AdminCategories from './pages/adminpages/categories.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -47,6 +48,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminHome />} />
       <Route path="/admin/products" element={<AdminProducts />} />
+      <Route path="/admin/categories" element={<AdminCategories />} />
       <Route path="/admin/product" element={<AdminProduct />} />
       <Route path="/admin/orders" element={<AdminOrders />} />
       <Route path="/admin/order" element={<AdminOrder />} />

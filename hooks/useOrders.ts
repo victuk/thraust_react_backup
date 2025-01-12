@@ -16,6 +16,7 @@ export const useOrders = () => {
 
   const [isAdminOrderHistoryLoading, setAdminOrderHistoryLoading] = useState(false);
   const [isAdminPendingOrderLoading, setAdminPendingOrderLoading] = useState(false);
+  const [isAdminMarkAsDeliveredLoading, setAdminMarkAsDeliveredLoading] = useState(false);
 
   const jwt = authStore((state) => state.userDetails.jwt);
 
@@ -269,6 +270,39 @@ export const useOrders = () => {
     }
   }
 
+  const adminMarkOrderAsDelivered = async (orderId: string) => {
+    try {
+      setAdminMarkAsDeliveredLoading(true);
+      const result = await axios.put(
+        urlMaker(`/shop/mark-as-delivered`), {
+          orderId
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return {
+        data: result.data,
+        error: null,
+        successful: true,
+      };
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return {
+        data: {
+          status: axiosError.response?.status
+        },
+        error: axiosError.response?.data,
+        successful: false,
+      };
+    } finally {
+      setAdminMarkAsDeliveredLoading(false);
+    }
+  }
+
   return {
     getPendingOrders,
     getOrderHistory,
@@ -277,6 +311,8 @@ export const useOrders = () => {
     markOrderAsDelivered,
     adminOrderHistory,
     adminPendingOrders,
+    adminMarkOrderAsDelivered,
+    isAdminMarkAsDeliveredLoading,
     isAdminOrderHistoryLoading,
     isAdminPendingOrderLoading,
     isCreateOrderLoading,

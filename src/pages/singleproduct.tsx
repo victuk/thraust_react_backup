@@ -1,8 +1,8 @@
 import DefaultLayout from "../components/layout/DefaultLayout";
-import { Link, useParams } from "react-router";
-import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Slider from "react-slick";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import { FaAngleLeft, FaAngleRight, FaShareAlt } from "react-icons/fa";
 import { useProduct } from "../../hooks/useProduct";
 import { Bounce } from "react-activity";
 import {
@@ -10,6 +10,8 @@ import {
   ProductInterface,
 } from "../../interfaces/ProductInterface";
 import { formatCurrency } from "../../utils/formatCurrency";
+import { cartStore } from "../../store/cartStore";
+import { toast } from "react-toastify";
 
 export default function SingleProduct() {
   const [productDetails, setProductDetails] = useState<ProductInterface | null>(
@@ -38,6 +40,18 @@ export default function SingleProduct() {
 
   let sliderRef = useRef<any>(null);
 
+  const cart = cartStore(state => state.cart);
+
+  const isInCart = cartStore(state => state.isInCart);
+
+  const addToCart = cartStore(state => state.addToCart);
+
+  const removeProduct = cartStore(state => state.removeProduct);
+
+  const isProductInCart = useMemo(() => {
+      return isInCart(id!!);
+    }, [cart]);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -46,6 +60,17 @@ export default function SingleProduct() {
     slidesToScroll: 1,
     nextArrow: <FaAngleRight color="black" />,
     prevArrow: <FaAngleLeft color="black" />,
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        toast.success('Text copied to clipboard!');
+      })
+      .catch((err) => {
+        toast.error("Couldn't copy text to clipboard!");
+        console.error('Failed to copy: ', err);
+      });
   };
 
   return (
@@ -64,7 +89,7 @@ export default function SingleProduct() {
                   <div>
                     <img
                       src={picture}
-                      className="h-[400px] w-[400px] mx-auto rounded-xl"
+                      className="h-[400px] w-fit mx-auto rounded-xl"
                     />
                   </div>
                 ))}
@@ -92,20 +117,27 @@ export default function SingleProduct() {
                     ))}
                 </div>
               </div>
-              <div className="font-bold text-[40px]">
-                {productDetails?.productName}
+              <div className="font-bold text-[35px] flex justify-between items-center">
+                <div>{productDetails?.productName}</div>
+                <button onClick={copyToClipboard}><FaShareAlt className="text-primary" size={20} /></button>
               </div>
               <div>
                 <div className="font-bold text-[25px]">
                   N{formatCurrency(productDetails?.cost as number)}
                 </div>
                 <div className={`flex gap-4 mt-4`}>
-                  <Link
-                    to="/product"
+                  <button
+                    onClick={() => {
+                      if(isProductInCart) {
+                        removeProduct(id!!);
+                      } else {
+                        addToCart(productDetails!!);
+                      }
+                    }}
                     className="bg-primary text-white w-full text-center py-2 rounded-xl font-bold"
                   >
-                    Add to Cart
-                  </Link>
+                    {isProductInCart ? "Remove from" : "Add to"} Cart
+                  </button>
                   {/* <Link
                 to="/product"
                 className="border border-2 border-solid border-primary text-primary w-full text-center py-2 rounded-xl font-bold"

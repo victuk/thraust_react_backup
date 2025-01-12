@@ -106,7 +106,7 @@ export default function OurProducts() {
       </div>
 
       <div className="mx-10 xl:mx-[140px] my-10">
-        <Products showPaginatedControl={true} category={categoryId} />
+        <Products showPageControl={true} category={categoryId} />
       </div>
     </DefaultLayout>
   );

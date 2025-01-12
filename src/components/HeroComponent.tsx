@@ -55,10 +55,10 @@ export default function HeroComponent() {
         <section id="home" className={swiperSlideStyle}>
           <div>
             <div className="flex flex-col gap-4 items-start">
-              <div className="text-[60px] font-bold text-primary">
+              <div className="text-[35px] lg:text-[60px] font-bold text-primary">
                 Thraust Your Confidence
               </div>
-              <div className="text-[35px]">
+              <div className="text-[20px] lg:text-[35px]">
                 Discover the latest trends and must-haves from Thraust, your
                 ultimate destination for stylish clothing.
               </div>

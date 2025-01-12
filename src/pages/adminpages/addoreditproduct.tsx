@@ -362,7 +362,7 @@ export default function AdminAddOrEdit() {
                 <button
                   key={index}
                   className={`${
-                    categories.includes(c._id)
+                    categories?.includes(c._id)
                       ? "bg-primary text-white"
                       : "bg-white text-primary"
                   } border border-2 border-primary rounded-md border-solid`}

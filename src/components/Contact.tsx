@@ -10,7 +10,7 @@ import AnimateOnScroll from "react-animate-on-scroll";
 export default function ContactComponent() {
   return (
     <AnimateOnScroll animateIn="fadeIn" duration={2}>
-    <section className="mx-10 xl:mx-[140px] h-[900px] xl:h-[850px] my-12 rounded-xl text-white bg-[#222] bg-black overflow-hidden">
+    <section className="mx-10 xl:mx-[140px] h[1000px] sm:h-[900px] md:h-[850px] xl:h-[850px] my-12 rounded-xl text-white bg-[#222] bg-black overflow-hidden">
           <div className="flex gap-4">
             <img src="/contactus.jpg" className="hidden lg:block lg:w-1/2" />
             <div className="px-6 py-10 w-full lg:w-1/2">

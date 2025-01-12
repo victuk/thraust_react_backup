@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import AdminDasboardLayout from '../../components/layout/AdminDasboardLayout'
+import { useCallback, useEffect, useRef, useState } from "react";
+import AdminDasboardLayout from "../../components/layout/AdminDasboardLayout";
 import { Bounce } from "react-activity";
 import {
   formatCurrency,
@@ -8,10 +8,9 @@ import {
 import { CgClose } from "react-icons/cg";
 import Slider from "react-slick";
 import Modal from "react-modal";
-import { ProductWithQuantity } from '../../../store/cartStore';
-import { useOrders } from '../../../hooks/useOrders';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
-
+import { ProductWithQuantity } from "../../../store/cartStore";
+import { useOrders } from "../../../hooks/useOrders";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
 interface OrderHistoryDocsInterface {
   _id: string;
@@ -33,120 +32,140 @@ interface OrderHistoryDocsInterface {
 }
 
 export default function AdminOrders() {
-
-  const { adminPendingOrders, isAdminPendingOrderLoading } = useOrders();
+  const {
+    adminPendingOrders,
+    isAdminPendingOrderLoading,
+    adminMarkOrderAsDelivered,
+    isAdminMarkAsDeliveredLoading,
+  } = useOrders();
 
   const [searchKeyword, setSearchKeyword] = useState("");
-  
-    const searchAction = () => {}
 
-      useEffect(() => {
-        adminPendingOrders();
-      }, []);
-    
-      const [orderhistoryDetails, setOrderHistoryDetails] =
-        useState<OrderHistoryDocsInterface[]>([]);
-    
-      const fetchOrderHistory = async () => {
-        const response = await adminPendingOrders();
-        console.log("Fetch pending order response", response.data.result);
-        setOrderHistoryDetails(response.data.result);
-      };
+  const searchAction = () => {};
 
-      useEffect(() => {
-        fetchOrderHistory();
-      }, []);
-    
-      const [modalIsOpen, setIsOpen] = useState(false);
-    
-      function openModal() {
-        setIsOpen(true);
-      }
-    
-      function closeModal() {
-        setIsOpen(false);
-      }
-    
-      const currencySymbol = getCurrencySymbol();
-    
-      //   const fetchOrderHistory = async (page: number, limit: number) => {
-      //     const response = await getOrderHistory(page, limit);
-    
-      //     // console.log(response.data.result);
-    
-      //     setOrderHistoryDetails(response.data.result);
-      //   };
-    
-      const [productModalDetails, setProductModalDetails] =
-        useState<ProductWithQuantity | null>(null);
-    
-      const openMoreDetails = (product: ProductWithQuantity) => {
-        setProductModalDetails(product);
-        openModal();
-      };
-    
-      const closeMoreDetails = () => {
-        closeModal();
-        setProductModalDetails(null);
-      };
-    
-      let sliderRef = useRef<any>(null);
-    
-      const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        nextArrow: <FaAngleRight color="black" />,
-        prevArrow: <FaAngleLeft color="black" />,
-      };
-    
-      let [totalAmount, setTotalAmount] = useState(0);
-    
-      useEffect(() => {
-        let totalQuantity = 0;
-    
-        if (productModalDetails) {
-          if (productModalDetails.sizeColorQuantity!!.length > 0) {
-            for (
-              let i = 0;
-              i < productModalDetails.sizeColorQuantity!!.length;
-              i++
-            ) {
-              totalQuantity += productModalDetails.sizeColorQuantity!![i].quantity;
-            }
-          }
-    
-          let totalAmountCalculated = productModalDetails.cost * totalQuantity;
-          setTotalAmount(totalAmountCalculated);
+  useEffect(() => {
+    adminPendingOrders();
+  }, []);
+
+  const [orderhistoryDetails, setOrderHistoryDetails] = useState<
+    OrderHistoryDocsInterface[]
+  >([]);
+
+  const fetchOrderHistory = async () => {
+    const response = await adminPendingOrders();
+    console.log("Fetch pending order response", response.data.result);
+    setOrderHistoryDetails(response.data.result);
+  };
+
+  useEffect(() => {
+    fetchOrderHistory();
+  }, []);
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const currencySymbol = getCurrencySymbol();
+
+  //   const fetchOrderHistory = async (page: number, limit: number) => {
+  //     const response = await getOrderHistory(page, limit);
+
+  //     // console.log(response.data.result);
+
+  //     setOrderHistoryDetails(response.data.result);
+  //   };
+
+  const [productModalDetails, setProductModalDetails] =
+    useState<ProductWithQuantity | null>(null);
+
+  const openMoreDetails = (product: ProductWithQuantity) => {
+    setProductModalDetails(product);
+    openModal();
+  };
+
+  const closeMoreDetails = () => {
+    closeModal();
+    setProductModalDetails(null);
+  };
+
+  let sliderRef = useRef<any>(null);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <FaAngleRight color="black" />,
+    prevArrow: <FaAngleLeft color="black" />,
+  };
+
+  let [totalAmount, setTotalAmount] = useState(0);
+
+  useEffect(() => {
+    let totalQuantity = 0;
+
+    if (productModalDetails) {
+      if (productModalDetails.sizeColorQuantity!!.length > 0) {
+        for (
+          let i = 0;
+          i < productModalDetails.sizeColorQuantity!!.length;
+          i++
+        ) {
+          totalQuantity += productModalDetails.sizeColorQuantity!![i].quantity;
         }
-      }, [modalIsOpen]);
-    
-      const grandTotal = useCallback((orderHistory: OrderHistoryDocsInterface) => {
-        let total = 0;
-    
-        for (let i = 0; i < orderHistory.products.length; i++) {
-          let totalPerQuantity = 0;
-          if (orderHistory.products[i].sizeColorQuantity!!.length > 0) {
-            for (
-              let j = 0;
-              j < orderHistory.products[i].sizeColorQuantity!!.length;
-              j++
-            ) {
-              totalPerQuantity +=
-                orderHistory.products[i].cost *
-                orderHistory.products[i].sizeColorQuantity!![j].quantity;
-            }
-            total += totalPerQuantity;
-          }
+      }
+
+      let totalAmountCalculated = productModalDetails.cost * totalQuantity;
+      setTotalAmount(totalAmountCalculated);
+    }
+  }, [modalIsOpen]);
+
+  const grandTotal = useCallback((orderHistory: OrderHistoryDocsInterface) => {
+    let total = 0;
+
+    for (let i = 0; i < orderHistory.products.length; i++) {
+      let totalPerQuantity = 0;
+      if (orderHistory.products[i].sizeColorQuantity!!.length > 0) {
+        for (
+          let j = 0;
+          j < orderHistory.products[i].sizeColorQuantity!!.length;
+          j++
+        ) {
+          totalPerQuantity +=
+            orderHistory.products[i].cost *
+            orderHistory.products[i].sizeColorQuantity!![j].quantity;
         }
-    
-        return total;
-      }, []);
+        total += totalPerQuantity;
+      }
+    }
+
+    return total;
+  }, []);
+
+  const markAsDelivered = async (orderId: string) => {
+    const response = await adminMarkOrderAsDelivered(orderId);
+    console.log("Mark as delivered", response);
+    if(response.data.status == 200) {
+      fetchOrderHistory();
+    }
+  };
 
   return (
-    <AdminDasboardLayout header='Orders' searchPlaceholder='Search Products' showSearch={false} searchValue={searchKeyword} setSearchValue={setSearchKeyword} searchAction={searchAction}>
+    <AdminDasboardLayout
+      header="Orders"
+      searchPlaceholder="Search Products"
+      showSearch={false}
+      searchValue={searchKeyword}
+      setSearchValue={setSearchKeyword}
+      searchAction={searchAction}
+    >
       <div className="mt-4">
         <div className="font-bold text-[25px]">Pending Orders</div>
         <div>
@@ -154,12 +173,11 @@ export default function AdminOrders() {
             {isAdminPendingOrderLoading && (
               <Bounce size={20} className="mx-auto" />
             )}
-            {!isAdminPendingOrderLoading &&
-              orderhistoryDetails.length == 0 && (
-                <div className="text-center font-bold text-[25px]">
-                  No pending order
-                </div>
-              )}
+            {!isAdminPendingOrderLoading && orderhistoryDetails.length == 0 && (
+              <div className="text-center font-bold text-[25px]">
+                No pending order
+              </div>
+            )}
             <div>
               {orderhistoryDetails.map((orderHistory) => {
                 const total = grandTotal(orderHistory);
@@ -173,7 +191,9 @@ export default function AdminOrders() {
                     <div>
                       <div className="font-medium text-[16px] mb-4">
                         <div>Products ordered</div>
-                      <div className='bg-[green] text-white px-2 rounded-xl w-fit text-[10px]'>Pending</div>
+                        <div className="bg-[green] text-white px-2 rounded-xl w-fit text-[10px]">
+                          Pending
+                        </div>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
                         {orderHistory.products.map((product) => (
@@ -196,9 +216,20 @@ export default function AdminOrders() {
                           </div>
                         ))}
                       </div>
-                      <div className='mt-8'>
-                      <button className='bg-primary text-white font-medium px-4 py-1 rounded-md'>Mark as delivered</button>
-                    </div>
+                      <div className="mt-8">
+                        <button
+                          className="bg-primary text-white font-medium px-4 py-1 rounded-md"
+                          onClick={() => {
+                            markAsDelivered(orderHistory._id);
+                          }}
+                        >
+                          {isAdminMarkAsDeliveredLoading ? (
+                            <Bounce />
+                          ) : (
+                            "Mark as delivered"
+                          )}
+                        </button>
+                      </div>
                     </div>
                     <div>
                       <div className="text-left md:text-right">
@@ -247,7 +278,7 @@ export default function AdminOrders() {
                 );
               })}
             </div>
-            <div></div>
+            {/* <div></div> */}
           </div>
 
           <Modal
@@ -329,5 +360,5 @@ export default function AdminOrders() {
         </div>
       </div>
     </AdminDasboardLayout>
-  )
+  );
 }
