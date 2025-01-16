@@ -61,7 +61,7 @@ export default function Products({
   const fetchProducts = async (page: number) => {
     const response = await getProductsPaginated(page, limit, category);
     console.log(response.data.result);
-    setFetchedProducts(response.data.result);
+    setFetchedProducts(response.data?.result);
   };
 
   useEffect(() => {

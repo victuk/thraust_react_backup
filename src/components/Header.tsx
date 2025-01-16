@@ -47,7 +47,7 @@ export default function Header() {
           alt="Thraust Logo"
         />
         <div className="text-[1.5rem] text-white font-bold">
-          <h1>Thraust</h1>
+          <h1>Harltze</h1>
         </div>
       </div>
       <button

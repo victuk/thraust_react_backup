@@ -51,7 +51,7 @@ export default function AdminDasboardLayout({
   return (
     <div className="h-screen w-full flex">
       <div className="w-[20%] border-r h-full bg-primary px-4 flex flex-col gap-4 py-10 font-bold text-white">
-        <div className="mb-10 text-[25px]">Thraust Admin</div>
+        <div className="mb-10 text-[25px]">Harltze Admin</div>
         <NavLink
           to="/admin/dashboard"
           className={({ isActive }) =>
