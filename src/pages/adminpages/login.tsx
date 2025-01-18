@@ -82,7 +82,7 @@ export default function AdminLogin() {
           {/* <img
             src="/thraustlogo.png"
             className="h-[40px] w-[40px]"
-            alt="Thraust Logo"
+            alt="Harltze Logo"
           /> */}
           <div className="mb-4 text-center font-bold text-[25px]" onClick={() => {navigate("/admin")}}>Admin Login</div>
           <div className="flex flex-col gap-6">

@@ -81,7 +81,7 @@ export default function Login() {
             {/* <img
             src="/thraustlogo.png"
             className="h-[40px] w-[40px]"
-            alt="Thraust Logo"
+            alt="Harltze Logo"
           /> */}
             <div
               className="mb-4 text-center font-bold text-[25px]"

@@ -12,7 +12,7 @@ export default function AboutUs() {
           <div className="flex gap-10 items-center">
             <div className="xl:w-[60%]">
               <div className="font-bold text-[40px] text-primary mb-8 text-center xl:text-left">
-                Brief introduction to Thraust...
+                Brief introduction to Harltze...
               </div>
               <div className="flex flex-col gap-4 text-center xl:text-left">
                 <div>
@@ -80,7 +80,7 @@ export default function AboutUs() {
         <Marquee pauseOnHover={true}>
           <div className="bg-[#ccc] p-4 rounded-xl mx-20">
             <blockquote>
-              <p>Thraust has been instrumental in our business growth...</p>
+              <p>Harltze has been instrumental in our business growth...</p>
               <cite>— Client Name</cite>
             </blockquote>
           </div>
@@ -88,7 +88,7 @@ export default function AboutUs() {
           <div className="bg-[#ccc] p-4 rounded-xl mx-20">
             <blockquote>
               <p>
-                Thraust's innovative solutions have exceeded our expectations...
+              Harltze's innovative solutions have exceeded our expectations...
               </p>
               <cite>— Client Name</cite>
             </blockquote>

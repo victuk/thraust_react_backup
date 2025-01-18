@@ -29,10 +29,10 @@ export default function HeroComponent() {
           <div>
             <div className="flex flex-col gap-4 items-start">
               <div className="text-[35px] lg:text-[60px] font-bold text-primary mt-20 lg:mt-0">
-                Thraust Your Confidence
+              Harltze Your Confidence
               </div>
               <div className="text-[20px] lg:text-[35px]">
-                Discover the latest trends and must-haves from Thraust, your
+                Discover the latest trends and must-haves from Harltze, your
                 ultimate destination for stylish clothing.
               </div>
               <div className="w-full">
@@ -56,10 +56,10 @@ export default function HeroComponent() {
           <div>
             <div className="flex flex-col gap-4 items-start">
               <div className="text-[35px] lg:text-[60px] font-bold text-primary">
-                Thraust Your Confidence
+              Harltze Your Confidence
               </div>
               <div className="text-[20px] lg:text-[35px]">
-                Discover the latest trends and must-haves from Thraust, your
+                Discover the latest trends and must-haves from Harltze, your
                 ultimate destination for stylish clothing.
               </div>
               <button

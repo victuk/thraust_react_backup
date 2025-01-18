@@ -72,7 +72,7 @@ export default function ContactComponent() {
                   </li>
                   <li className="flex gap-2 items-center">
                     <MdEmail size={25} />
-                    <a href="mailto:info@example.com">thraust@luxury.com</a>
+                    <a href="mailto:harltze@luxury.com">harltze@luxury.com</a>
                   </li>
                 </ul>
                 <ul className="flex gap-4 mt-4">

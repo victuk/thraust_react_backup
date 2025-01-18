@@ -44,7 +44,7 @@ export default function Header() {
         <img
           src="/thraustlogo.png"
           className="h-[40px] w-[40px]"
-          alt="Thraust Logo"
+          alt="Harltze Logo"
         />
         <div className="text-[1.5rem] text-white font-bold">
           <h1>Harltze</h1>
